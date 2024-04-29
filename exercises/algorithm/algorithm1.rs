@@ -69,15 +69,38 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
-	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+}
+
+impl<T: std::cmp::PartialOrd + Clone> LinkedList<T> {
+    pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    {
+        //TODO
+        let mut list_c = LinkedList::<T>::new();
+        let mut ptr_a = list_a.start;
+        let mut ptr_b = list_b.start;
+        while ptr_a.is_some() && ptr_b.is_some(){
+            let val_a = unsafe{ptr_a.unwrap().as_ref().val.clone()};
+            let val_b = unsafe{ptr_b.unwrap().as_ref().val.clone()};
+            if val_a < val_b{
+                list_c.add(val_a);
+                ptr_a = unsafe{ptr_a.unwrap().as_ref().next};
+            }else{
+                list_c.add(val_b);
+                ptr_b = unsafe{ptr_b.unwrap().as_ref().next};
+            }
         }
-	}
+        while ptr_a.is_some(){
+            let val_a = unsafe{ptr_a.unwrap().as_ref().val.clone()};
+            list_c.add(val_a);
+            ptr_a = unsafe{ptr_a.unwrap().as_ref().next};
+        }
+        while ptr_b.is_some(){
+            let val_b = unsafe{ptr_b.unwrap().as_ref().val.clone()};
+            list_c.add(val_b);
+            ptr_b = unsafe{ptr_b.unwrap().as_ref().next};
+        }
+        list_c
+    }
 }
 
 impl<T> Display for LinkedList<T>
